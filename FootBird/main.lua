@@ -21,3 +21,5 @@ flamengo.x = 50
 flamengo.y = 100
 
 flamengo:addEventListener( "touch", iniciaJogo)
+
+composer.gotoScene( "jogo" )
