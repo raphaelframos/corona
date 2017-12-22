@@ -79,7 +79,7 @@ function criaObstaculoTres(nome, cor, quantidadeDeTitulos)
 end
 
 function criaObstaculoQuatro(nome, cor, quantidadeDeTitulos)
-  local posicaoXObstaculo = (distancia*3)+larguraObstaculo
+  local posicaoXObstaculo = obstaculo3.x + distancia
   local posicaoYObstaculo = 10
   alturaObstaculo = (quantidadeDeTitulos*multiplicadorDeTitulos)
   obstaculo4 = display.newRect( posicaoXObstaculo, posicaoYObstaculo, larguraObstaculo, alturaObstaculo)
@@ -98,6 +98,18 @@ function criaObstaculos()
 
 end
 
+local fakyYDelta = 7
+local fakyFlapDelta = 0
+
+local function flapBird (event)
+	if (event.phase == "began") then
+		fakyFlapDelta = 20
+	end
+end
+
+
+local footBird = display.newRect (50, 50, 20,20)
+footBird:setFillColor (0.3,0.3,0.3)
 criaObstaculos()
 
 function transporta(obstaculo, obstaculoB, texto)
@@ -114,44 +126,38 @@ local function atualiza (event)
   transporta(obstaculo3, obstaculo3B, texto3)
   transporta(obstaculo4, obstaculo4B, texto4)
 
-  if obstaculo3.x-larguraObstaculo == (distancia*2) and quartoObstaculoNaoCriado then
+  if (largura-obstaculo3.x) >= distancia and quartoObstaculoNaoCriado then
     criaObstaculoQuatro("Vasco", { 1, 1, 0 }, 4)
     quartoObstaculoNaoCriado = false
   end
 
 if obstaculo1.x <= -60 then
   obstaculo1.x = obstaculo4.x + distancia
+  obstaculo1B.x = obstaculo4B.x + distancia
+  texto1.x = obstaculo1.x
 elseif obstaculo2.x <= -60 then
   obstaculo2.x = obstaculo1.x + distancia
+  obstaculo2B.x = obstaculo1B.x + distancia
+  texto2.x = obstaculo2.x
 elseif obstaculo3.x <= -60 then
   obstaculo3.x = obstaculo2.x + distancia
+  obstaculo3B.x = obstaculo2B.x + distancia
+  texto3.x = obstaculo3.x
 elseif obstaculo4.x <= -60 then
   obstaculo4.x = obstaculo3.x + distancia
+  obstaculo4B.x = obstaculo3B.x + distancia
+  texto4.x = obstaculo4.x
 end
---[[
-
-if (pBot01.x <= -20) then
-  pBot01.x = pBot04.x + 80
-elseif (pBot02.x <= -20) then
-  pBot02.x = pBot01.x + 80
-elseif (pBot03.x <= -20) then
-  pBot03.x = pBot02.x + 80
-elseif (pBot04.x <= -20) then
-  pBot04.x = pBot03.x + 80
+if (fakyFlapDelta > 0) then
+  footBird.y = footBird.y - fakyFlapDelta
+  fakyFlapDelta = fakyFlapDelta - 0.8
 end
-	pBot02.x = pBot02.x - 0.5
-	pTop02.x = pBot02.x - 0.5
-
-	pBot03.x = pBot03.x - 0.5
-	pTop03.x = pBot03.x - 0.5
-
-	pBot04.x = pBot04.x - 0.5
-	pTop04.x = pBot04.x - 0.5
-  ]]--
+footBird.y = footBird.y + fakyYDelta
 
 end
 
 Runtime:addEventListener ("enterFrame", atualiza)
+fundo:addEventListener ("touch", flapBird)
 scene:addEventListener( "createScene", scene )
 scene:addEventListener( "enterScene", scene )
 scene:addEventListener( "exitScene", scene )
